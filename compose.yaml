@@ -1,0 +1,16 @@
+services:
+  app:
+    build: ./backend
+    restart: on-failure
+    volumes:
+      - ./backend:/app
+      - myimage:/app/static/images
+    ports:
+      - 8000:8000
+    develop:
+      watch:
+        - action: sync
+          path: ./app.py
+          target: /app/app.py
+volumes:
+  myimage:
