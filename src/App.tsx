@@ -1,11 +1,26 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { CurrentPageContext } from '@/components/current-page-context.tsx';
+import { AuthForm } from './components/auth-form';
 
 interface ApiResponse {
     message: string;
 }
 
+function Control() {
+    const { currentPage } = useContext(CurrentPageContext);
+
+    return (
+        <div>
+            <div className='flex gap-4 flex-col'>
+                {currentPage >= 0 && currentPage <= 1 && <AuthForm />}
+            </div>
+        </div>
+    );
+}
+
 export default function App() {
     const [data, setData] = useState<ApiResponse | null>(null);
+    const [currentPage, setCurrentPage] = useState(0);
 
     useEffect(() => {
         fetch('http://localhost:8000/')
@@ -13,9 +28,10 @@ export default function App() {
             .then((result: ApiResponse) => setData(result));
     }, []);
     return (
-        <div className='text-center'>
-            Пока
-            <pre>{JSON.stringify(data?.message, null, 2)}</pre>
-        </div>
+        <CurrentPageContext.Provider value={{ currentPage, setCurrentPage }}>
+            <main className='max-w-[750px] m-auto antialiased'>
+                <Control />
+            </main>
+        </CurrentPageContext.Provider>
     );
 }
