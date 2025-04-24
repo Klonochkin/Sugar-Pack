@@ -9,47 +9,95 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useState } from 'react';
 
 export function OrderForm({ name }: { name: string }) {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const [phone, setPhone] = useState('');
+    const [quantity, setQuantity] = useState(0);
+
+    function placeOrder() {
+        if (!phone && quantity <= 0) return false;
+        let status = 'processing';
+        const keys = Object.keys(localStorage);
+
+        const productKeys = keys.filter((key) => key.startsWith('product'));
+
+        const productNumbers = productKeys.map((key) => {
+            const match = key.match(/product(\d+)/);
+            return match ? parseInt(match[1], 10) : 0;
+        });
+
+        const maxProductNumber =
+            productNumbers.length > 0 ? Math.max(...productNumbers) : 0;
+
+        let key = `product${maxProductNumber + 1}`;
+        const order = {
+            name: { name },
+            quantity: { quantity },
+            phone: { phone },
+            status: { status },
+            key: { key },
+        };
+
+        localStorage.setItem(
+            `product${maxProductNumber + 1}`,
+            JSON.stringify(order),
+        );
+        return true;
+    }
+
     return (
-        <Dialog>
-            <DialogTrigger asChild>
-                <Button variant='link'>Оформить заказ</Button>
-            </DialogTrigger>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <Button
+                variant='link'
+                onClick={() => {
+                    setPhone('');
+                    setQuantity(0);
+                    setIsOpen((isOpen) => !isOpen);
+                }}>
+                Оформить заказ
+            </Button>
             <DialogContent className='sm:max-w-[425px]'>
                 <DialogHeader>
                     <DialogTitle>Заказ на {name}</DialogTitle>
                 </DialogHeader>
                 <div className='grid gap-4 py-4'>
                     <div className='grid grid-cols-4 items-center gap-4'>
-                        <Label htmlFor='name' className='text-right'>
+                        <Label htmlFor='phone' className='text-right'>
                             Номер телефона
                         </Label>
                         <Input
-                            id='name'
+                            id='phone'
                             placeholder='+79000000000'
                             type='tel'
                             className='col-span-3'
+                            onChange={(e) => setPhone(e.target.value)}
                         />
                     </div>
                     <div className='grid grid-cols-4 items-center gap-4'>
-                        <Label htmlFor='username' className='text-right'>
+                        <Label htmlFor='quantity' className='text-right'>
                             Количество
                         </Label>
                         <Input
                             placeholder='1'
                             type='number'
                             min='1'
-                            id='username'
+                            id='quantity'
                             className='col-span-3'
+                            onChange={(e) =>
+                                setQuantity(parseInt(e.target.value))
+                            }
                         />
                     </div>
                 </div>
                 <DialogFooter>
                     <DialogTrigger asChild>
-                        <Button type='button'>Заказать</Button>
+                        <Button type='button' onClick={placeOrder}>
+                            Заказать
+                        </Button>
                     </DialogTrigger>
-                    {/* <Button type='button'>Заказать</Button> */}
                 </DialogFooter>
             </DialogContent>
         </Dialog>
