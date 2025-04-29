@@ -1,17 +1,16 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CurrentPageContext } from '@/components/current-page-context.tsx';
 import { AuthForm } from './components/auth-form';
 import { Catalog } from './components/catalog';
 import { ListOrder } from './components/list-orders';
 import { NavigationMenuDemo } from './components/navigation-menu';
+import { Routes, Route } from 'react-router';
 
 interface ApiResponse {
     message: string;
 }
 
 function Control() {
-    const { currentPage } = useContext(CurrentPageContext);
-
     return (
         <div>
             <div className='fixed w-screen top-0 left-0 h-[5rem] bg-[#141414] z-[2]'>
@@ -28,9 +27,11 @@ function Control() {
                 </div>
             </div>
             <div className='flex gap-4 flex-col'>
-                {currentPage >= 0 && currentPage <= 1 && <AuthForm />}
-                {currentPage === 2 && <Catalog />}
-                {currentPage === 3 && <ListOrder />}
+                <Routes>
+                    <Route path='/login' element={<AuthForm />}></Route>
+                    <Route path='/catalog' element={<Catalog />}></Route>
+                    <Route path='/order' element={<ListOrder />}></Route>
+                </Routes>
             </div>
         </div>
     );
@@ -38,7 +39,7 @@ function Control() {
 
 export default function App() {
     const [data, setData] = useState<ApiResponse | null>(null);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(0);
 
     useEffect(() => {
         console.log(data);

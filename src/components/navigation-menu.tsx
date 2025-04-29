@@ -10,16 +10,10 @@ import {
     NavigationMenuList,
     NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
-import { useContext } from 'react';
-import { CurrentPageContext } from './current-page-context';
+import { useNavigate } from 'react-router';
 
 export function NavigationMenuDemo() {
-    const context = useContext(CurrentPageContext);
-    const { setCurrentPage } = context;
-    function setPage(num: number) {
-        setCurrentPage(() => num);
-        console.log(num);
-    }
+    const navigate = useNavigate();
     return (
         <NavigationMenu>
             <NavigationMenuList>
@@ -28,10 +22,10 @@ export function NavigationMenuDemo() {
                     <NavigationMenuContent>
                         <ul className='gap-3 p-4 md:w-[200px] lg:w-[300px]'>
                             <ListItem
-                                onClick={() => setPage(2)}
+                                onClick={() => navigate('/catalog')}
                                 title='Каталог'></ListItem>
                             <ListItem
-                                onClick={() => setPage(3)}
+                                onClick={() => navigate('/order')}
                                 title='Заказы'></ListItem>
                         </ul>
                     </NavigationMenuContent>
