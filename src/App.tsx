@@ -3,6 +3,7 @@ import { CurrentPageContext } from '@/components/current-page-context.tsx';
 import { AuthForm } from './components/auth-form';
 import { Catalog } from './components/catalog';
 import { ListOrder } from './components/list-orders';
+import { NavigationMenuDemo } from './components/navigation-menu';
 
 interface ApiResponse {
     message: string;
@@ -23,6 +24,7 @@ function Control() {
                     <p className='cursor-pointer'>+7 (900) 123-45-67</p>
                     <p className='cursor-pointer'>+7 (900) 987-65-43</p>
                     <p className='cursor-pointer'>test@test.ru</p>
+                    <NavigationMenuDemo />
                 </div>
             </div>
             <div className='flex gap-4 flex-col'>
@@ -36,7 +38,7 @@ function Control() {
 
 export default function App() {
     const [data, setData] = useState<ApiResponse | null>(null);
-    const [currentPage, setCurrentPage] = useState(3);
+    const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
         console.log(data);
