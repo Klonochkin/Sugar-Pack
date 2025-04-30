@@ -5,6 +5,7 @@ import { Catalog } from './components/catalog';
 import { ListOrder } from './components/list-orders';
 import { Routes, Route } from 'react-router';
 import { NavigationMenuHeader } from './components/header-navigation';
+import { LandingPage } from './components/landing-page';
 
 interface ApiResponse {
     message: string;
@@ -20,6 +21,7 @@ function Control() {
             </div>
             <div className='flex gap-4 flex-col'>
                 <Routes>
+                    <Route path='/' element={<LandingPage />}></Route>
                     <Route path='/login' element={<AuthForm />}></Route>
                     <Route path='/catalog' element={<Catalog />}></Route>
                     <Route path='/order' element={<ListOrder />}></Route>
@@ -41,7 +43,7 @@ export default function App() {
     }, []);
     return (
         <CurrentPageContext.Provider value={{ currentPage, setCurrentPage }}>
-            <main className='max-w-[750px] m-auto antialiased relative'>
+            <main className='relative'>
                 <Control />
             </main>
         </CurrentPageContext.Provider>

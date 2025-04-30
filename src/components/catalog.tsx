@@ -70,7 +70,7 @@ export function Catalog() {
     ];
     return (
         <>
-            <div className='mt-[7rem] mb-[7rem]'>
+            <div className='max-w-[750px] m-auto antialiased mt-[7rem] mb-[7rem]'>
                 <p className='text-xl font-semibold mb-[2rem]'>Каталог</p>
                 <div className='grid grid-flow-row auto-cols-max gap-10 md:grid-cols-2 lg:grid-cols-3'>
                     {direction.map((i) => (
