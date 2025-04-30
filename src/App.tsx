@@ -3,8 +3,8 @@ import { CurrentPageContext } from '@/components/current-page-context.tsx';
 import { AuthForm } from './components/auth-form';
 import { Catalog } from './components/catalog';
 import { ListOrder } from './components/list-orders';
-import { NavigationMenuDemo } from './components/navigation-menu';
 import { Routes, Route } from 'react-router';
+import { NavigationMenuHeader } from './components/header-navigation';
 
 interface ApiResponse {
     message: string;
@@ -14,16 +14,8 @@ function Control() {
     return (
         <div>
             <div className='fixed w-screen top-0 left-0 h-[5rem] bg-[#141414] z-[2]'>
-                <div className='flex flex-row items-center justify-center h-full w-full place-content-between gap-[5rem]'>
-                    <img
-                        className='cursor-pointer w-[8rem]'
-                        src='../images/logo.png'
-                        alt=''
-                    />
-                    <p className='cursor-pointer'>+7 (900) 123-45-67</p>
-                    <p className='cursor-pointer'>+7 (900) 987-65-43</p>
-                    <p className='cursor-pointer'>test@test.ru</p>
-                    <NavigationMenuDemo />
+                <div className='flex flex-row items-center justify-center h-full w-full place-content-between gap-[2.5rem]'>
+                    <NavigationMenuHeader />
                 </div>
             </div>
             <div className='flex gap-4 flex-col'>
