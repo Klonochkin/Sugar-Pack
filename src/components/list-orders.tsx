@@ -47,7 +47,7 @@ export function ListOrder() {
 
     return (
         <>
-            <div className='mt-[7rem] mb-[7rem]'>
+            <div className='max-w-[750px] m-auto antialiased  mt-[7rem] mb-[7rem]'>
                 <p className='text-xl font-semibold mb-[2rem]'>
                     Список заказов
                 </p>

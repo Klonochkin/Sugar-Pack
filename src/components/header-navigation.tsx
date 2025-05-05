@@ -23,9 +23,7 @@ export function NavigationMenuHeader() {
                     </NavigationMenuLink>
                 </NavigationMenuItem>
                 <NavigationMenuItem className='flex justify-center items-center'>
-                    <NavigationMenuLink
-                        className={navigationMenuTriggerStyle()}
-                        href='/'>
+                    <NavigationMenuLink href='/'>
                         <img
                             className='cursor-pointer w-[7.5rem]'
                             src='../images/logo.png'
