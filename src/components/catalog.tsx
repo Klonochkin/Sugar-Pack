@@ -1,6 +1,14 @@
 import { ArrowBigRightIcon } from 'lucide-react';
 import { Button } from './ui/button';
 import { useNavigate } from 'react-router';
+import { useEffect, useState } from 'react';
+
+interface Data {
+    name: string;
+    quantity: string;
+    image: string;
+    path: string;
+}
 
 function Card({
     name,
@@ -37,45 +45,36 @@ function Card({
 }
 
 export function Catalog() {
-    const direction = [
-        {
-            name: 'Типовая упаковка',
-            quantity: '8шт',
-            image: 'cardImage1.jpg',
-            path: 'tipovaya-upakovka',
-        },
-        {
-            name: 'Пищевая упаковка',
-            quantity: '7шт',
-            image: 'cardImage2.jpg',
-            path: 'pishhevaya-upakovka',
-        },
-        {
-            name: 'Блистерная упаковка',
-            quantity: '11шт',
-            image: 'cardImage3.jpg',
-            path: 'blisternaya-upakovka',
-        },
-        {
-            name: 'Упаковка для фруктов',
-            quantity: '1шт',
-            image: 'cardImage4.jpg',
-            path: 'upakovka-dlya-fruktov-i-yagod',
-        },
-    ];
+    const [data, setData] = useState<Data[] | null>(null);
+
+    useEffect(() => {
+        fetch('http://localhost:8000/api/get-catalog')
+            .then((response) => response.json())
+            .then((result: Data[]) => {
+                setData(result);
+                console.log(result);
+            });
+    }, []);
+
     return (
         <>
             <div className='max-w-[750px] m-auto antialiased mt-[7rem] mb-[7rem]'>
                 <p className='text-xl font-semibold mb-[2rem]'>Каталог</p>
                 <div className='grid grid-flow-row auto-cols-max gap-10 md:grid-cols-2 lg:grid-cols-3'>
-                    {direction.map((i) => (
-                        <Card
-                            name={i.name}
-                            quantity={i.quantity}
-                            image={i.image}
-                            path={i.path}
-                        />
-                    ))}
+                    {data && data?.length > 0 ? (
+                        data.map((i) => (
+                            <Card
+                                name={i.name}
+                                quantity={i.quantity}
+                                image={i.image}
+                                path={i.path}
+                            />
+                        ))
+                    ) : (
+                        <div>
+                            Каталог пока что пуст. Приносим свои извинения
+                        </div>
+                    )}
                 </div>
             </div>
         </>
