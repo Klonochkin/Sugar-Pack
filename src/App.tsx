@@ -7,6 +7,7 @@ import { Routes, Route } from 'react-router';
 import { NavigationMenuHeader } from './components/header-navigation';
 import { LandingPage } from './components/landing-page';
 import { Footer } from './components/footer';
+import { TipovayaUpakovka } from './components/tipovaya-upakovka';
 
 interface ApiResponse {
     message: string;
@@ -26,6 +27,9 @@ function Control() {
                     <Route path='/login' element={<AuthForm />}></Route>
                     <Route path='/catalog' element={<Catalog />}></Route>
                     <Route path='/order' element={<ListOrder />}></Route>
+                    <Route
+                        path='/catalog/tipovaya-upakovka'
+                        element={<TipovayaUpakovka />}></Route>
                 </Routes>
             </div>
             <Footer />
@@ -38,10 +42,12 @@ export default function App() {
     const [currentPage, setCurrentPage] = useState(0);
 
     useEffect(() => {
-        console.log(data);
         fetch('http://localhost:8000/')
             .then((response) => response.json())
-            .then((result: ApiResponse) => setData(result));
+            .then((result: ApiResponse) => {
+                setData(result);
+                console.log(result);
+            });
     }, []);
     return (
         <CurrentPageContext.Provider value={{ currentPage, setCurrentPage }}>
