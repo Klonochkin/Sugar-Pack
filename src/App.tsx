@@ -46,7 +46,7 @@ export default function App() {
             .then((response) => response.json())
             .then((result: ApiResponse) => {
                 setData(result);
-                console.log(result);
+                console.log(data);
             });
     }, []);
     return (
