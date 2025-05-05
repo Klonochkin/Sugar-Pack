@@ -6,6 +6,7 @@ import { ListOrder } from './components/list-orders';
 import { Routes, Route } from 'react-router';
 import { NavigationMenuHeader } from './components/header-navigation';
 import { LandingPage } from './components/landing-page';
+import { Footer } from './components/footer';
 
 interface ApiResponse {
     message: string;
@@ -27,6 +28,7 @@ function Control() {
                     <Route path='/order' element={<ListOrder />}></Route>
                 </Routes>
             </div>
+            <Footer />
         </div>
     );
 }
@@ -43,7 +45,7 @@ export default function App() {
     }, []);
     return (
         <CurrentPageContext.Provider value={{ currentPage, setCurrentPage }}>
-            <main className='relative'>
+            <main className='relative overflow-x-hidden'>
                 <Control />
             </main>
         </CurrentPageContext.Provider>
