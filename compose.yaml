@@ -6,6 +6,15 @@ services:
       - 27017:27017
     volumes:
       - ./backend/init.js:/docker-entrypoint-initdb.d/init.js
+
+  init:
+    build: ./backend
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/app
+    command: python init.py
+
   app:
     build: ./backend
     restart: on-failure
