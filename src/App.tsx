@@ -7,7 +7,7 @@ import { Routes, Route } from 'react-router';
 import { NavigationMenuHeader } from './components/header-navigation';
 import { LandingPage } from './components/landing-page';
 import { Footer } from './components/footer';
-import { TipovayaUpakovka } from './components/tipovaya-upakovka';
+import { FullCatalog } from './components/full-catalog';
 
 interface ApiResponse {
     message: string;
@@ -27,9 +27,7 @@ function Control() {
                     <Route path='/login' element={<AuthForm />}></Route>
                     <Route path='/catalog' element={<Catalog />}></Route>
                     <Route path='/order' element={<ListOrder />}></Route>
-                    <Route
-                        path='/catalog/tipovaya-upakovka'
-                        element={<TipovayaUpakovka />}></Route>
+                    <Route path='/catalog/*' element={<FullCatalog />}></Route>
                 </Routes>
             </div>
             <Footer />

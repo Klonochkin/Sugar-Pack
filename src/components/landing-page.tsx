@@ -32,7 +32,7 @@ export function LandingPage() {
             <div className='flex flex-col gap-5 max-w-[750px] m-auto antialiased mt-[4rem] mb-[7rem]'>
                 <p className='text-3xl relative'>
                     <div className='before:absolute before:-left-4 before:top-0 before:h-full before:bg-[#d28e5f] before:w-[4px]' />
-                    О производстве пластиковой упаковки
+                    Лучшие упаковки здесь
                 </p>
                 <p>
                     ООО «Сахара Пак» – производитель пластиковой упаковки с

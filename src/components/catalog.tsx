@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import { useEffect, useState } from 'react';
 
 interface Data {
+    id: string;
     name: string;
     quantity: string;
     image: string;
@@ -11,22 +12,21 @@ interface Data {
 }
 
 function Card({
+    id,
     name,
     quantity,
     image,
-    path,
 }: {
+    id: string;
     name: string;
     quantity: string;
     image: string;
-    path: string;
 }) {
     const navigate = useNavigate();
-    // border-orange-400 border-[2px]
     return (
         <>
             <div
-                onClick={() => navigate(`/catalog/${path}`)}
+                onClick={() => navigate(`/catalog/${id}`)}
                 className='relative w-[15rem] h-[15rem] flex flex-col justify-between p-5 before:content-[""] before:bg-gray-700 before:absolute before:w-full before:h-full before:top-0 before:left-0 before:opacity-50 text-center cursor-pointer border-orange-400 border-[2px]'
                 style={{ backgroundImage: `url('../images/${image}')` }}>
                 <div className='flex flex-col items-center z-[1] font-semibold text-xl gap-1'>
@@ -64,10 +64,10 @@ export function Catalog() {
                     {data && data?.length > 0 ? (
                         data.map((i) => (
                             <Card
+                                id={i.id}
                                 name={i.name}
                                 quantity={i.quantity}
                                 image={i.image}
-                                path={i.path}
                             />
                         ))
                     ) : (
