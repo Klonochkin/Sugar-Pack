@@ -26,7 +26,7 @@ if(postProduct.count_documents({}) == 0):
     {
         'id': '3',
         'name': 'Блистерная упаковка',
-        'quantity': '11шт',
+        'quantity': '',
         'image': 'cardImage3.jpg',
         'path': 'blisternaya-upakovka',
     },
@@ -36,8 +36,23 @@ if(postProduct.count_documents({}) == 0):
         'quantity': '1шт',
         'image': 'cardImage4.jpg',
         'path': 'upakovka-dlya-fruktov-i-yagod',
-    }]
-    postProduct.insert_many(dataProduct)
+    },
+    {
+        'id': '5',
+        'name': 'Промоупаковка',
+        'quantity': '4шт',
+        'image': 'promoupakovka_270x270_d7b.jpg',
+        'path': 'upakovka-dlya-fruktov-i-yagod',
+    },
+    {
+        'id': '6',
+        'name': 'Упаковка разного назначения',
+        'quantity': '4шт',
+        'image': 'upakovka-raznogo-naznacheniya_270x270_d7b.jpg',
+        'path': 'upakovka-dlya-fruktov-i-yagod',
+    }
+]
+postProduct.insert_many(dataProduct)
 
 if(postFullProducts.count_documents({}) == 0):
     dataAllProduct = [{
@@ -115,5 +130,50 @@ if(postFullProducts.count_documents({}) == 0):
         'name': 'Упаковка 7',
         'image': '37_633x360_1be.jpg',
     },
-    ]
-    postFullProducts.insert_many(dataAllProduct)
+    {
+        'idProduct' : '4',
+        'name': 'Упаковка для ягод и фруктов',
+        'image': '23-serdcze-s-yagodami-min_633x360_1be.jpg',
+    },
+    {
+        'idProduct' : '5',
+        'name': 'Промоупаковка 1',
+        'image': '09_633x360_1be.jpg',
+    },
+    {
+        'idProduct' : '5',
+        'name': 'Промоупаковка 2',
+        'image': '04_633x360_1be.jpg',
+    },
+    {
+        'idProduct' : '5',
+        'name': 'Промоупаковка 3',
+        'image': '10_633x360_1be.jpg',
+    },
+    {
+        'idProduct' : '5',
+        'name': 'Промоупаковка 4',
+        'image': '24_633x360_1be.jpg',
+    },
+    {
+        'idProduct' : '6',
+        'name': 'Упаковка разного назначения 1',
+        'image': '11_633x360_1be.jpg',
+    },
+    {
+        'idProduct' : '6',
+        'name': 'Упаковка разного назначения 2',
+        'image': '25_633x360_1be.jpg',
+    },
+    {
+        'idProduct' : '6',
+        'name': 'Упаковка разного назначения 3',
+        'image': '41-(1)_633x360_1be.jpg',
+    },
+    {
+        'idProduct' : '6',
+        'name': 'Упаковка разного назначения 4',
+        'image': '49_633x360_1be.jpg',
+    },
+]
+postFullProducts.insert_many(dataAllProduct)

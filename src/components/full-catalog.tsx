@@ -20,7 +20,7 @@ function Card({ name, image }: { name: string; image: string }) {
                 </div>
                 <div className='flex items-center flex-col z-[1]'>
                     <Button variant='ghost'>
-                        Заказать
+                        Подробнее
                         <ArrowBigRightIcon />
                     </Button>
                 </div>

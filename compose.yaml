@@ -4,9 +4,6 @@ services:
     restart: on-failure
     ports:
       - 27017:27017
-    volumes:
-      - ./backend/init.js:/docker-entrypoint-initdb.d/init.js
-
   init:
     build: ./backend
     depends_on:
