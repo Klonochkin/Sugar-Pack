@@ -51,7 +51,7 @@ export function OrderForm({ name }: { name: string }) {
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <Button
-                variant='link'
+                variant='default'
                 onClick={() => {
                     setPhone('');
                     setQuantity(0);

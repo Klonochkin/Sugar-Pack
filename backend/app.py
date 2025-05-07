@@ -46,3 +46,14 @@ async def getFullCatalog(id: str):
         del post_dict['_id']
         posts_list.append(post_dict)
     return posts_list
+
+@app.get('/api/get-product/{id}')
+async def getProduct(id: str):
+    dataSend = postFullProducts.find({'id': id})
+    print(id)
+    posts_list = []
+    for post in dataSend:
+        post_dict = dict(post)
+        del post_dict['_id']
+        posts_list.append(post_dict)
+    return posts_list

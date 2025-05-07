@@ -8,6 +8,7 @@ import { NavigationMenuHeader } from './components/header-navigation';
 import { LandingPage } from './components/landing-page';
 import { Footer } from './components/footer';
 import { FullCatalog } from './components/full-catalog';
+import { Order } from './components/order';
 
 interface ApiResponse {
     message: string;
@@ -28,6 +29,7 @@ function Control() {
                     <Route path='/catalog' element={<Catalog />}></Route>
                     <Route path='/order' element={<ListOrder />}></Route>
                     <Route path='/catalog/*' element={<FullCatalog />}></Route>
+                    <Route path='/order/*' element={<Order />}></Route>
                 </Routes>
             </div>
             <Footer />
