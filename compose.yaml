@@ -1,4 +1,17 @@
 services:
+  db:
+    image: mongo
+    restart: on-failure
+    ports:
+      - 27017:27017
+  init:
+    build: ./backend
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/app
+    command: python init.py
+
   app:
     build: ./backend
     restart: on-failure
@@ -12,5 +25,6 @@ services:
         - action: sync
           path: ./app.py
           target: /app/app.py
+
 volumes:
   myimage:

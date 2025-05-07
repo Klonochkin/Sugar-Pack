@@ -7,6 +7,7 @@ import { Routes, Route } from 'react-router';
 import { NavigationMenuHeader } from './components/header-navigation';
 import { LandingPage } from './components/landing-page';
 import { Footer } from './components/footer';
+import { FullCatalog } from './components/full-catalog';
 
 interface ApiResponse {
     message: string;
@@ -26,6 +27,7 @@ function Control() {
                     <Route path='/login' element={<AuthForm />}></Route>
                     <Route path='/catalog' element={<Catalog />}></Route>
                     <Route path='/order' element={<ListOrder />}></Route>
+                    <Route path='/catalog/*' element={<FullCatalog />}></Route>
                 </Routes>
             </div>
             <Footer />
@@ -38,10 +40,12 @@ export default function App() {
     const [currentPage, setCurrentPage] = useState(0);
 
     useEffect(() => {
-        console.log(data);
         fetch('http://localhost:8000/')
             .then((response) => response.json())
-            .then((result: ApiResponse) => setData(result));
+            .then((result: ApiResponse) => {
+                setData(result);
+                console.log(data);
+            });
     }, []);
     return (
         <CurrentPageContext.Provider value={{ currentPage, setCurrentPage }}>
