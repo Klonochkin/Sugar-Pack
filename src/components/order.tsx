@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router';
 import { Button } from './ui/button';
 import { ArrowBigLeftIcon } from 'lucide-react';
 import { OrderForm } from './order-form';
+import { Feedback } from './feedback';
 
 interface Data {
     id: string;
@@ -10,10 +11,15 @@ interface Data {
     image: string;
     description: string;
 }
+interface Feature {
+    nameFeature: string;
+    discFeature: string;
+}
 
 export function Order() {
     const navigate = useNavigate();
     const [data, setData] = useState<Data[] | null>(null);
+    const [feature, setFeature] = useState<Feature[] | null>(null);
     const [isDescription, setIsDescription] = useState(true);
     const location = useLocation();
     location;
@@ -25,8 +31,11 @@ export function Order() {
             .then((response) => response.json())
             .then((result: Data[]) => {
                 setData(result);
-                console.log(result);
-                console.log(result[0].image);
+            });
+        fetch(`http://localhost:8000/api/get-feature/${id}`)
+            .then((response) => response.json())
+            .then((result: Feature[]) => {
+                setFeature(result);
             });
     }, []);
 
@@ -67,7 +76,7 @@ export function Order() {
                             Характеристики
                         </Button>
                     </div>
-                    <div>? Задать вопрос</div>
+                    <Feedback />
                 </div>
                 <div className='mt-5'>
                     {isDescription ? (
@@ -76,8 +85,14 @@ export function Order() {
                                 ? data[0].description
                                 : 'Описание временно отсутствует'}
                         </p>
+                    ) : feature && feature?.length > 0 ? (
+                        feature.map((i) => (
+                            <div>
+                                {i.nameFeature}: {i.discFeature}
+                            </div>
+                        ))
                     ) : (
-                        <p>Хар-ки</p>
+                        'Характеристики временно отсутствуют'
                     )}
                 </div>
             </div>
