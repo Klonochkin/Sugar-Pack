@@ -8,11 +8,13 @@ interface Data {
     id: string;
     name: string;
     image: string;
+    description: string;
 }
 
 export function Order() {
     const navigate = useNavigate();
     const [data, setData] = useState<Data[] | null>(null);
+    const [isDescription, setIsDescription] = useState(true);
     const location = useLocation();
     location;
     const path = location.pathname.split('/');
@@ -54,10 +56,29 @@ export function Order() {
                 </div>
                 <div className='flex flex-row justify-between mt-5 cursor-pointer'>
                     <div className='flex flex-row gap-5'>
-                        <p>Описание</p>
-                        <p>Характеристики</p>
+                        <Button
+                            variant='ghost'
+                            onClick={() => setIsDescription(true)}>
+                            Описание
+                        </Button>
+                        <Button
+                            variant='ghost'
+                            onClick={() => setIsDescription(false)}>
+                            Характеристики
+                        </Button>
                     </div>
                     <div>? Задать вопрос</div>
+                </div>
+                <div className='mt-5'>
+                    {isDescription ? (
+                        <p>
+                            {data && data[0].description
+                                ? data[0].description
+                                : 'Описание временно отсутствует'}
+                        </p>
+                    ) : (
+                        <p>Хар-ки</p>
+                    )}
                 </div>
             </div>
         </>

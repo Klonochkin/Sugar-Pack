@@ -13,22 +13,31 @@ app.add_middleware(
 )
 
 client = MongoClient("db", 27017)
+# client.drop_database('typeProduct')
 # client.drop_database('product')
-# client.drop_database('allProduct')
+# client.drop_database('feature')
+dbTypeProduct = client.typeProduct
+postTypeProduct = dbTypeProduct.posts
+
 dbProduct = client.product
 postProduct = dbProduct.posts
 
-dbFullProducts = client.allProduct
-postFullProducts = dbFullProducts.posts
+dbFeature = client.feature
+postFeature = dbFeature.posts
 
+dbUser = client.user
+postUser = dbUser.posts
+
+dbSession = client.session
+postSession = dbSession.posts
 
 @app.get('/')
 async def welcome():
     return {"message" : "gb"}
 
-@app.get('/api/get-catalog')
+@app.get('/api/get-type-catalog')
 async def getCatalog():
-    dataSend = postProduct.find({})
+    dataSend = postTypeProduct.find({})
     posts_list = []
     for post in dataSend:
         post_dict = dict(post)
@@ -36,10 +45,9 @@ async def getCatalog():
         posts_list.append(post_dict)
     return posts_list
 
-@app.get('/api/get-fullcatalog/{id}')
+@app.get('/api/get-product-catalog/{id}')
 async def getFullCatalog(id: str):
-    dataSend = postFullProducts.find({'idProduct': id})
-    print(id)
+    dataSend = postProduct.find({'idTypeProduct': id})
     posts_list = []
     for post in dataSend:
         post_dict = dict(post)
@@ -49,8 +57,7 @@ async def getFullCatalog(id: str):
 
 @app.get('/api/get-product/{id}')
 async def getProduct(id: str):
-    dataSend = postFullProducts.find({'id': id})
-    print(id)
+    dataSend = postProduct.find({'id': id})
     posts_list = []
     for post in dataSend:
         post_dict = dict(post)
