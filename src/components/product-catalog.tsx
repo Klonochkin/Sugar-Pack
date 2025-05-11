@@ -5,14 +5,25 @@ import { useNavigate } from 'react-router';
 import { useLocation } from 'react-router';
 
 interface Data {
+    id: string;
     name: string;
     image: string;
 }
 
-function Card({ name, image }: { name: string; image: string }) {
+function Card({
+    id,
+    name,
+    image,
+}: {
+    id: string;
+    name: string;
+    image: string;
+}) {
+    const navigate = useNavigate();
     return (
         <>
             <div
+                onClick={() => navigate(`/order/${id}`)}
                 className='relative bg-cover bg-center w-[15rem] h-[15rem] flex flex-col justify-between p-5 before:content-[""] before:bg-gray-700 before:absolute before:w-full before:h-full before:top-0 before:left-0 before:opacity-50 text-center cursor-pointer border-orange-400 border-[2px]'
                 style={{ backgroundImage: `url('../images/${image}')` }}>
                 <div className='flex flex-col items-center z-[1] font-semibold text-xl gap-1'>
@@ -28,7 +39,7 @@ function Card({ name, image }: { name: string; image: string }) {
         </>
     );
 }
-export function FullCatalog() {
+export function ProductCatalog() {
     const navigate = useNavigate();
     const [data, setData] = useState<Data[] | null>(null);
     const location = useLocation();
@@ -37,7 +48,7 @@ export function FullCatalog() {
     const id = path[path.length - 1];
 
     useEffect(() => {
-        fetch(`http://localhost:8000/api/get-fullcatalog/${id}`)
+        fetch(`http://localhost:8000/api/get-product-catalog/${id}`)
             .then((response) => response.json())
             .then((result: Data[]) => {
                 setData(result);
@@ -60,7 +71,9 @@ export function FullCatalog() {
                 </p>
                 <div className='grid grid-flow-row auto-cols-max gap-10 md:grid-cols-2 lg:grid-cols-3'>
                     {data && data.length > 0 ? (
-                        data.map((i) => <Card name={i.name} image={i.image} />)
+                        data.map((i) => (
+                            <Card id={i.id} name={i.name} image={i.image} />
+                        ))
                     ) : (
                         <div>Товар временно отсутствует</div>
                     )}

@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { CurrentPageContext } from '@/components/current-page-context.tsx';
 import { AuthForm } from './components/auth-form';
-import { Catalog } from './components/catalog';
+import { TypeCatalog } from './components/type-catalog';
 import { ListOrder } from './components/list-orders';
 import { Routes, Route } from 'react-router';
 import { NavigationMenuHeader } from './components/header-navigation';
 import { LandingPage } from './components/landing-page';
 import { Footer } from './components/footer';
-import { FullCatalog } from './components/full-catalog';
+import { ProductCatalog } from './components/product-catalog';
+import { Order } from './components/order';
 
 interface ApiResponse {
     message: string;
@@ -25,9 +26,12 @@ function Control() {
                 <Routes>
                     <Route path='/' element={<LandingPage />}></Route>
                     <Route path='/login' element={<AuthForm />}></Route>
-                    <Route path='/catalog' element={<Catalog />}></Route>
+                    <Route path='/catalog' element={<TypeCatalog />}></Route>
                     <Route path='/order' element={<ListOrder />}></Route>
-                    <Route path='/catalog/*' element={<FullCatalog />}></Route>
+                    <Route
+                        path='/catalog/*'
+                        element={<ProductCatalog />}></Route>
+                    <Route path='/order/*' element={<Order />}></Route>
                 </Routes>
             </div>
             <Footer />

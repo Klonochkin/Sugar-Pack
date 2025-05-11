@@ -44,11 +44,11 @@ function Card({
     );
 }
 
-export function Catalog() {
+export function TypeCatalog() {
     const [data, setData] = useState<Data[] | null>(null);
 
     useEffect(() => {
-        fetch('http://localhost:8000/api/get-catalog')
+        fetch('http://localhost:8000/api/get-type-catalog')
             .then((response) => response.json())
             .then((result: Data[]) => {
                 setData(result);
