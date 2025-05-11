@@ -1,5 +1,8 @@
-from fastapi import FastAPI, Request
+import hashlib
+import os
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pymongo import MongoClient
 
 app = FastAPI()
@@ -38,8 +41,29 @@ dbFeedback = client.feedback
 postFeedback = dbFeedback.posts
 
 @app.get('/')
-async def welcome():
-    return {"message" : "gb"}
+async def welcome(request: Request):
+    # dataSend = postSession.find({})
+    # posts_list = []
+    # for post in dataSend:
+    #     post_dict = dict(post)
+    #     del post_dict['_id']
+    #     posts_list.append(post_dict)
+    # print(posts_list)
+    cookies = request.cookies
+    session_value = cookies.get("session")
+    res = postSession.find_one({"session": session_value})
+    if(res==None):
+        return {"role" : "none"}
+    else:
+        dataSend = postUser.find({"id": res["id"]})
+        posts_list = []
+        for post in dataSend:
+            post_dict = dict(post)
+            del post_dict['_id']
+            del post_dict['password']
+            del post_dict['salt']
+            posts_list.append(post_dict)
+        return posts_list
 
 @app.get('/api/get-type-catalog')
 async def getCatalog():
@@ -100,3 +124,71 @@ async def sendFeedbacj(request: Request):
         }
         postFeedback.insert_one(post)
     return {"message": "Отзыв отправлен"}
+
+@app.post("/api/signIn")
+async def signIn(request: Request):
+    data = await request.json()
+    login = data["login"]
+    password = data["password"]
+    res = postUser.find_one({'login': login})
+    if(res==None):
+        res = postUser.find_one({'email': login})
+        if(res == None):
+            raise HTTPException(status_code=401, detail="Аккаунт не найден")
+
+    salt = res['salt']
+    truePassword = res['password']
+    checkPassword = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000).hex()
+
+    if(truePassword != checkPassword):
+        raise HTTPException(status_code=422, detail="Не правильный пароль")
+
+    hashSession = hashlib.pbkdf2_hmac('sha256', login.encode('utf-8'),os.urandom(16).hex().encode('utf-8'), 100000).hex()
+    content = {"message": "true"}
+    response = JSONResponse(content=content)
+    response.set_cookie(key="session", value=hashSession)
+    filterDelete = {'id':res["id"]}
+    postSession.delete_one(filterDelete)
+    n=postSession.count_documents({})
+
+    if(postSession.count_documents({}) == n):
+        post = {
+            "id": res["id"],
+            "session": hashSession
+        }
+        res = postSession.insert_one(post)
+
+    return response
+
+@app.post("/api/signUp")
+async def signUp(request: Request):
+    data = await request.json()
+    login = data["login"]
+    email = data["email"]
+    phone = data["phone"]
+    password = data["password"]
+    res = postUser.find_one({'email': email})
+    res1 = postUser.find_one({'login': login})
+    if(res!=None):
+        raise HTTPException(status_code=401, detail="Аккаунт уже существует")
+    else:
+        if(res1 != None):
+            raise HTTPException(status_code=401, detail="Аккаунт уже существует")
+    if(len(password)<8):
+        raise HTTPException(status_code=422, detail="Пароль слишком короткий")
+    n=postUser.count_documents({})
+    salt = os.urandom(16)
+    hashPassword = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt.hex().encode('utf-8'), 100000)
+    userId = n+1
+    if( postUser.count_documents({}) == n):
+        post = {
+            "id": userId,
+            "login" : login,
+            "email": email,
+            "phone": phone,
+            "role": "user",
+            "password":hashPassword.hex(),
+            "salt":salt.hex().encode('utf-8')
+        }
+        postUser.insert_one(post)
+    return {"message": "Регистрация успешна"}

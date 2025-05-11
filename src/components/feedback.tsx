@@ -28,6 +28,7 @@ export function Feedback() {
             setIsOpen(!isOpen);
             fetch(`http://localhost:8000/api/send-feedback/`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
                 },
