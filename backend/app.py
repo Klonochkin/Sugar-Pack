@@ -42,13 +42,13 @@ postFeedback = dbFeedback.posts
 
 @app.get('/')
 async def welcome(request: Request):
-    dataSend = postUser.find({})
-    posts_list = []
-    for post in dataSend:
-        post_dict = dict(post)
-        del post_dict['_id']
-        posts_list.append(post_dict)
-    print(posts_list)
+    # dataSend = postUser.find({})
+    # posts_list = []
+    # for post in dataSend:
+    #     post_dict = dict(post)
+    #     del post_dict['_id']
+    #     posts_list.append(post_dict)
+    # print(posts_list)
     cookies = request.cookies
     session_value = cookies.get("session")
     res = postSession.find_one({"session": session_value})
@@ -192,3 +192,12 @@ async def signUp(request: Request):
         }
         postUser.insert_one(post)
     return {"message": "Регистрация успешна"}
+
+@app.post("/api/signOut")
+async def signOut(request: Request):
+    content = {"message": "true"}
+    session = request.cookies.get("session")
+    response = JSONResponse(content=content)
+    filterDelete = {'session':session}
+    postSession.delete_one(filterDelete)
+    return response
