@@ -37,11 +37,25 @@ function Control() {
 
 export default function App() {
     const [currentPage, setCurrentPage] = useState(0);
+    const [login, setLogin] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
     const [role, setRole] = useState('user');
 
     return (
         <CurrentPageContext.Provider
-            value={{ currentPage, role, setCurrentPage, setRole }}>
+            value={{
+                currentPage,
+                login,
+                email,
+                phone,
+                role,
+                setLogin,
+                setEmail,
+                setPhone,
+                setCurrentPage,
+                setRole,
+            }}>
             <main className='relative overflow-x-hidden'>
                 <Control />
             </main>

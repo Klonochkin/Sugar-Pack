@@ -42,18 +42,18 @@ postFeedback = dbFeedback.posts
 
 @app.get('/')
 async def welcome(request: Request):
-    # dataSend = postSession.find({})
-    # posts_list = []
-    # for post in dataSend:
-    #     post_dict = dict(post)
-    #     del post_dict['_id']
-    #     posts_list.append(post_dict)
-    # print(posts_list)
+    dataSend = postUser.find({})
+    posts_list = []
+    for post in dataSend:
+        post_dict = dict(post)
+        del post_dict['_id']
+        posts_list.append(post_dict)
+    print(posts_list)
     cookies = request.cookies
     session_value = cookies.get("session")
     res = postSession.find_one({"session": session_value})
     if(res==None):
-        return {"role" : "none"}
+        return [{"role" : "none"}]
     else:
         dataSend = postUser.find({"id": res["id"]})
         posts_list = []

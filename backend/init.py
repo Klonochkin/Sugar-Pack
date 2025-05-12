@@ -11,6 +11,9 @@ postProduct = dbProduct.posts
 dbFeature = client.feature
 postFeature = dbFeature.posts
 
+dbUser = client.user
+postUser = dbUser.posts
+
 if(postTypeProduct.count_documents({}) == 0):
     dataProduct = [{
         'id': '1',
@@ -238,3 +241,16 @@ if(postFeature.count_documents({}) == 0):
     },
 ]
 postFeature.insert_many(dataFeatures)
+
+if(postUser.count_documents({}) == 0):
+    dataUser = [{
+        'id': '0',
+        'login': 'admin',
+        "email": 'admin@gmail.com',
+        "phone": '+79000000000',
+        "role": "admin",
+        "password":'f46493412045ced47ed1fa147781263249ac34dee5653cebac7028079d680aa2',
+        "salt":b'27a5c1f43323af23b5943189155fc12c',
+    },
+]
+postUser.insert_many(dataUser)

@@ -14,6 +14,7 @@ import { Button } from './ui/button';
 import { useContext } from 'react';
 import { CurrentPageContext } from './current-page-context';
 import { useNavigate } from 'react-router';
+import { AccountCard } from './card';
 
 interface UserInfo {
     login: string;
@@ -24,7 +25,7 @@ interface UserInfo {
 
 export function NavigationMenuHeader() {
     const context = useContext(CurrentPageContext);
-    const { role, setRole } = context;
+    const { role, setRole, setLogin, setEmail, setPhone } = context;
     const navigate = useNavigate();
     React.useEffect(() => {
         fetch('http://localhost:8000/', {
@@ -35,8 +36,16 @@ export function NavigationMenuHeader() {
             },
         })
             .then((response) => response.json())
-            .then((result: UserInfo) => {
-                setRole(result.role);
+            .then((result: UserInfo[]) => {
+                if (role != result[0].role) {
+                    setRole(result[0].role);
+                    if (result[0].role != 'none') {
+                        setLogin(result[0].login);
+                        setEmail(result[0].email);
+                        setPhone(result[0].phone);
+                    }
+                }
+                console.log(result[0].login);
             });
     }, []);
 
@@ -84,9 +93,7 @@ export function NavigationMenuHeader() {
                         Вход
                     </Button>
                 ) : (
-                    <Button variant='ghost' className='invisible'>
-                        Вход
-                    </Button>
+                    <AccountCard />
                 )}
             </div>
         </div>

@@ -14,13 +14,21 @@ interface UserInfo {
 
 export function AuthForm() {
     const context = useContext(CurrentPageContext);
-    const { currentPage, setCurrentPage } = context;
+    const {
+        role,
+        setRole,
+        setLogin,
+        setEmail,
+        setPhone,
+        currentPage,
+        setCurrentPage,
+    } = context;
     const navigate = useNavigate();
 
-    const [login, setLogin] = useState('');
-    const [password, setPassword] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
+    const [login, setInputLogin] = useState('');
+    const [password, setInputPassword] = useState('');
+    const [email, setInputEmail] = useState('');
+    const [phone, setInputPhone] = useState('');
 
     function setPage(num: number) {
         setCurrentPage(() => num);
@@ -43,7 +51,26 @@ export function AuthForm() {
                     }),
                 }).then((response) => {
                     if (response.ok) {
-                        navigate('/');
+                        fetch('http://localhost:8000/', {
+                            method: 'GET',
+                            credentials: 'include',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                        })
+                            .then((response) => response.json())
+                            .then((result: UserInfo[]) => {
+                                if (role != result[0].role) {
+                                    if (result[0].role != 'none') {
+                                        setRole(result[0].role);
+                                        setLogin(result[0].login);
+                                        setEmail(result[0].email);
+                                        setPhone(result[0].phone);
+                                    }
+                                }
+                                console.log(result[0].login);
+                                navigate('/');
+                            });
                     }
                     response.json();
                 });
@@ -91,7 +118,7 @@ export function AuthForm() {
                                         type='text'
                                         className='col-span-3'
                                         onChange={(e) =>
-                                            setLogin(e.target.value)
+                                            setInputLogin(e.target.value)
                                         }
                                     />
                                 </Label>
@@ -102,7 +129,7 @@ export function AuthForm() {
                                         type='email'
                                         className='col-span-3'
                                         onChange={(e) =>
-                                            setEmail(e.target.value)
+                                            setInputEmail(e.target.value)
                                         }
                                     />
                                 </Label>
@@ -115,7 +142,7 @@ export function AuthForm() {
                                         type='tel'
                                         className='col-span-3'
                                         onChange={(e) =>
-                                            setPhone(e.target.value)
+                                            setInputPhone(e.target.value)
                                         }
                                     />
                                 </Label>
@@ -128,7 +155,7 @@ export function AuthForm() {
                                         type='password'
                                         className='col-span-3'
                                         onChange={(e) =>
-                                            setPassword(e.target.value)
+                                            setInputPassword(e.target.value)
                                         }
                                     />
                                 </Label>
@@ -165,7 +192,7 @@ export function AuthForm() {
                                         type='text'
                                         className='col-span-3'
                                         onChange={(e) =>
-                                            setLogin(e.target.value)
+                                            setInputLogin(e.target.value)
                                         }
                                     />
                                 </Label>
@@ -178,7 +205,7 @@ export function AuthForm() {
                                         type='password'
                                         className='col-span-3'
                                         onChange={(e) =>
-                                            setPassword(e.target.value)
+                                            setInputPassword(e.target.value)
                                         }
                                     />
                                 </Label>
