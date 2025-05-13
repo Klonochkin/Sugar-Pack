@@ -22,6 +22,7 @@ client = MongoClient("db", 27017)
 # client.drop_database('user')
 # client.drop_database('session')
 # client.drop_database('feedback')
+# client.drop_database('order')
 dbTypeProduct = client.typeProduct
 postTypeProduct = dbTypeProduct.posts
 
@@ -39,6 +40,9 @@ postSession = dbSession.posts
 
 dbFeedback = client.feedback
 postFeedback = dbFeedback.posts
+
+dbOrder = client.order
+postOrder = dbOrder.posts
 
 @app.get('/')
 async def welcome(request: Request):
@@ -114,7 +118,7 @@ async def sendFeedbacj(request: Request):
     message = data["message"]
     n=postFeedback.count_documents({})
     userId = n+1
-    if( postUser.count_documents({}) == n):
+    if(postFeedback.count_documents({}) == n):
         post = {
             "id": userId,
             "name": name,
@@ -201,3 +205,57 @@ async def signOut(request: Request):
     filterDelete = {'session':session}
     postSession.delete_one(filterDelete)
     return response
+
+@app.post('/api/send-order')
+async def sendOrder(request: Request):
+    cookies = request.cookies
+    session_value = cookies.get("session")
+    res = postSession.find_one({"session": session_value})
+    if(res==None):
+        raise HTTPException(status_code=403, detail="Пользователь не вошёл")
+    data = await request.json()
+    name = data["name"]
+    phone = data["phone"]
+    quantity = data["quantity"]
+    n=postOrder.count_documents({})
+    userId = res["id"]
+    orderId = n+1
+    if( postOrder.count_documents({}) == n):
+        post = {
+            "id": orderId,
+            "idUser":userId,
+            "name": name,
+            "phone": phone,
+            "quantity":quantity,
+            "status": "processing",
+        }
+        postOrder.insert_one(post)
+    return {"message": "Заказ добавлен"}
+
+@app.get('/api/get-order')
+async def getOrder(request: Request):
+    cookies = request.cookies
+    session_value = cookies.get("session")
+    res = postSession.find_one({"session": session_value})
+    if(res==None):
+        return [{'message': 'noob'}]
+    else:
+        userInfo = postUser.find_one({"id":res["id"]})
+        if(userInfo["role"] == "admin"):
+            dataSend = postOrder.find({})
+            posts_list = []
+            for post in dataSend:
+                post_dict = dict(post)
+                del post_dict['_id']
+                posts_list.append(post_dict)
+            return posts_list
+        else:
+            dataSend = postOrder.find({"idUser":res["id"]})
+            posts_list = []
+            for post in dataSend:
+                post_dict = dict(post)
+                del post_dict['_id']
+                posts_list.append(post_dict)
+            return posts_list
+
+

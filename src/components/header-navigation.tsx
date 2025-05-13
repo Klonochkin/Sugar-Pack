@@ -36,15 +36,15 @@ export function NavigationMenuHeader() {
         })
             .then((response) => response.json())
             .then((result: UserInfo[]) => {
-                if (role != result[0].role) {
-                    setRole(result[0].role);
-                    if (result[0].role != 'none') {
-                        setLogin(result[0].login);
-                        setEmail(result[0].email);
-                        setPhone(result[0].phone);
-                    }
+                // if (role != result[0].role) {
+                setRole(result[0].role);
+                if (result[0].role != 'none') {
+                    setLogin(result[0].login);
+                    setEmail(result[0].email);
+                    setPhone(result[0].phone);
                 }
-                console.log(result[0].login);
+                // }
+                console.log(result[0].role);
             });
     }, []);
 
