@@ -258,4 +258,28 @@ async def getOrder(request: Request):
                 posts_list.append(post_dict)
             return posts_list
 
+@app.post('/api/update-order')
+async def updateOrder(request: Request):
+    data = await request.json()
+    id = data["id"]
+    status = data["status"]
+    cookies = request.cookies
+    session_value = cookies.get("session")
+    res = postSession.find_one({"session": session_value})
+    if(res==None):
+        return [{'message': 'noob'}]
+    else:
+        userInfo = postUser.find_one({"id":res["id"]})
+        if(userInfo["role"] == "admin"):
+            filter = {'id':int(id)}
+            postOrder.update_many(filter, {'$set': {'status': status}})
+            return [{'message': 'ok'}]
+        else:
+            if(userInfo["role"] == "user" and status=="cansel"):
+                checkIsOwner = postOrder.find_one({"id":id})
+                if(checkIsOwner["idUser"] == userInfo["id"]):
+                    filter = {'id':int(id)}
+                    postOrder.update_many(filter, {'$set': {'status': status}})
+                    return [{'message': 'ok'}]
+    return [{'message': '403 erroe'}]
 

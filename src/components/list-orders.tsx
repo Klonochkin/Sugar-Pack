@@ -3,6 +3,7 @@ import { DropdownMenuRadio } from './drop-down-menu';
 import { CurrentPageContext } from './current-page-context';
 
 interface Item {
+    id: string;
     name: string;
     quantity: string;
     phone: string;
@@ -50,7 +51,9 @@ export function ListOrder() {
                             {orders.length > 0 ? (
                                 <>
                                     {orders.map((i) => (
-                                        <div className='grid grid-cols-5 text-center mb-5 items-center'>
+                                        <div
+                                            className='grid grid-cols-5 text-center mb-5 items-center'
+                                            key={i.id}>
                                             <div>{i.name}</div>
                                             <div>{i.quantity}</div>
                                             <div>{i.phone}</div>
@@ -58,10 +61,10 @@ export function ListOrder() {
                                                 {i?.status ? i.status : 'no'}
                                             </div>
                                             <DropdownMenuRadio
+                                                id={i.id}
                                                 getOrders={() => {
                                                     getOrders();
                                                 }}
-                                                name={i.name}
                                                 status={i?.status}
                                             />
                                         </div>

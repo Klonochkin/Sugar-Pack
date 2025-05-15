@@ -13,11 +13,11 @@ import {
 import { CurrentPageContext } from './current-page-context';
 
 export function DropdownMenuRadio({
-    name,
+    id,
     status,
     getOrders,
 }: {
-    name: string;
+    id: string;
     status: string;
     getOrders: () => void;
 }) {
@@ -35,19 +35,23 @@ export function DropdownMenuRadio({
                     value={position}
                     onValueChange={(value) => {
                         setPosition(value);
-                        const data = localStorage.getItem(name);
-
-                        if (data) {
-                            console.log(name);
-                            const parsedData = JSON.parse(data);
-                            let status = value;
-                            parsedData.status = status;
-                            localStorage.setItem(
-                                name,
-                                JSON.stringify(parsedData),
-                            );
-                            getOrders();
-                        }
+                        console.log(id);
+                        fetch(`http://localhost:8000/api/update-order/`, {
+                            method: 'POST',
+                            credentials: 'include',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                id: id,
+                                status: value,
+                            }),
+                        })
+                            .then((response) => response.json())
+                            .then((result) => {
+                                console.log(result);
+                                getOrders();
+                            });
                     }}>
                     {role == 'admin' ? (
                         <>
