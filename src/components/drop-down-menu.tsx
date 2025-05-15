@@ -11,13 +11,16 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { CurrentPageContext } from './current-page-context';
+import { CostForm } from './cost-form';
 
 export function DropdownMenuRadio({
     id,
+    name,
     status,
     getOrders,
 }: {
     id: string;
+    name: string;
     status: string;
     getOrders: () => void;
 }) {
@@ -34,6 +37,7 @@ export function DropdownMenuRadio({
                 <DropdownMenuRadioGroup
                     value={position}
                     onValueChange={(value) => {
+                        console.log(value);
                         setPosition(value);
                         console.log(id);
                         fetch(`http://localhost:8000/api/update-order/`, {
@@ -61,9 +65,7 @@ export function DropdownMenuRadio({
                             <DropdownMenuRadioItem value='preparation'>
                                 Подготовка сырья
                             </DropdownMenuRadioItem>
-                            <DropdownMenuRadioItem value='making'>
-                                Изготовление
-                            </DropdownMenuRadioItem>
+                            <CostForm name={name} />
                             <DropdownMenuRadioItem value='trial'>
                                 Проба формы
                             </DropdownMenuRadioItem>

@@ -62,6 +62,7 @@ export function ListOrder() {
                                             </div>
                                             <DropdownMenuRadio
                                                 id={i.id}
+                                                name={i.name}
                                                 getOrders={() => {
                                                     getOrders();
                                                 }}
