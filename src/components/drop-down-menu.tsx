@@ -28,6 +28,25 @@ export function DropdownMenuRadio({
     const context = React.useContext(CurrentPageContext);
     const { role } = context;
 
+    function setStatusByValue(value: string) {
+        setPosition(value);
+        fetch(`http://localhost:8000/api/update-order/`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id: id,
+                status: value,
+            }),
+        })
+            .then((response) => response.json())
+            .then(() => {
+                getOrders();
+            });
+    }
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -37,45 +56,48 @@ export function DropdownMenuRadio({
                 <DropdownMenuRadioGroup
                     value={position}
                     onValueChange={(value) => {
-                        console.log(value);
-                        setPosition(value);
-                        console.log(id);
-                        fetch(`http://localhost:8000/api/update-order/`, {
-                            method: 'POST',
-                            credentials: 'include',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                id: id,
-                                status: value,
-                            }),
-                        })
-                            .then((response) => response.json())
-                            .then((result) => {
-                                console.log(result);
-                                getOrders();
-                            });
+                        setStatusByValue(value);
                     }}>
                     {role == 'admin' ? (
                         <>
-                            <DropdownMenuRadioItem value='processing'>
+                            <DropdownMenuRadioItem
+                                value='processing'
+                                disabled={true}>
                                 В обработке
                             </DropdownMenuRadioItem>
-                            <DropdownMenuRadioItem value='preparation'>
-                                Подготовка сырья
+                            <CostForm
+                                name={name}
+                                id={id}
+                                setPosition={(value: string) => {
+                                    setStatusByValue(value);
+                                }}
+                                disabled={
+                                    position == 'processing' ? false : true
+                                }
+                            />
+                            <DropdownMenuRadioItem
+                                value='making'
+                                disabled={true}>
+                                Изготовление
                             </DropdownMenuRadioItem>
-                            <CostForm name={name} />
-                            <DropdownMenuRadioItem value='trial'>
+                            <DropdownMenuRadioItem
+                                value='trial'
+                                disabled={position == 'making' ? false : true}>
                                 Проба формы
                             </DropdownMenuRadioItem>
-                            <DropdownMenuRadioItem value='ready'>
+                            <DropdownMenuRadioItem
+                                value='ready'
+                                disabled={position == 'trial' ? false : true}>
                                 Готов
                             </DropdownMenuRadioItem>
                         </>
                     ) : (
                         <>
-                            <DropdownMenuRadioItem value='cansel'>
+                            <DropdownMenuRadioItem
+                                value='cansel'
+                                disabled={
+                                    position == 'processing' ? false : true
+                                }>
                                 Отменить
                             </DropdownMenuRadioItem>
                         </>

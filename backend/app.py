@@ -1,6 +1,6 @@
 import hashlib
 import os
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, Form, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pymongo import MongoClient
@@ -23,6 +23,7 @@ client = MongoClient("db", 27017)
 # client.drop_database('session')
 # client.drop_database('feedback')
 # client.drop_database('order')
+# client.drop_database('material')
 dbTypeProduct = client.typeProduct
 postTypeProduct = dbTypeProduct.posts
 
@@ -43,6 +44,9 @@ postFeedback = dbFeedback.posts
 
 dbOrder = client.order
 postOrder = dbOrder.posts
+
+dbMaterial = client.material
+postMaterial = dbMaterial.posts
 
 @app.get('/')
 async def welcome(request: Request):
@@ -283,3 +287,47 @@ async def updateOrder(request: Request):
                     return [{'message': 'ok'}]
     return [{'message': '403 erroe'}]
 
+@app.post('/api/send-material/')
+async def sendMaterial(request: Request):
+    cookies = request.cookies
+    session_value = cookies.get("session")
+    res = postSession.find_one({"session": session_value})
+    if(res==None):
+        return [{'message': '403 error'}]
+    userInfo = postUser.find_one({"id":res["id"]})
+    if(userInfo["role"] != "admin"):
+        return [{'message': '411 error'}]
+    form_data = await request.form()
+    count = int(form_data.get("count"))
+    orderId = form_data.get("orderId")
+    for i in range(count):
+        n=postMaterial.count_documents({})
+        materialId = n+1
+        print("if")
+        if(postMaterial.count_documents({}) == n):
+            post = {
+                "id": materialId,
+                "idOrder":orderId,
+                "material": form_data.get("material" + str(i)),
+                "quantity": form_data.get("quantity" + str(i)),
+            }
+            postMaterial.insert_one(post)
+    return {"message": "true"}
+
+@app.get('/api/get-material/')
+async def getMaterial(request: Request):
+    cookies = request.cookies
+    session_value = cookies.get("session")
+    res = postSession.find_one({"session": session_value})
+    if(res==None):
+        return [{'message': '403 error'}]
+    userInfo = postUser.find_one({"id":res["id"]})
+    if(userInfo["role"] != "admin"):
+        return [{'message': '411 error'}]
+    dataSend = postMaterial.find({})
+    posts_list = []
+    for post in dataSend:
+        post_dict = dict(post)
+        del post_dict['_id']
+        posts_list.append(post_dict)
+    return posts_list
