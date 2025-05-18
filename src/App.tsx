@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { CurrentPageContext } from '@/components/current-page-context.tsx';
 import { AuthForm } from './components/auth-form';
 import { TypeCatalog } from './components/type-catalog';
@@ -9,10 +9,6 @@ import { LandingPage } from './components/landing-page';
 import { Footer } from './components/footer';
 import { ProductCatalog } from './components/product-catalog';
 import { Order } from './components/order';
-
-interface ApiResponse {
-    message: string;
-}
 
 function Control() {
     return (
@@ -40,19 +36,26 @@ function Control() {
 }
 
 export default function App() {
-    const [data, setData] = useState<ApiResponse | null>(null);
     const [currentPage, setCurrentPage] = useState(0);
+    const [login, setLogin] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [role, setRole] = useState('user');
 
-    useEffect(() => {
-        fetch('http://localhost:8000/')
-            .then((response) => response.json())
-            .then((result: ApiResponse) => {
-                setData(result);
-                console.log(data);
-            });
-    }, []);
     return (
-        <CurrentPageContext.Provider value={{ currentPage, setCurrentPage }}>
+        <CurrentPageContext.Provider
+            value={{
+                currentPage,
+                login,
+                email,
+                phone,
+                role,
+                setLogin,
+                setEmail,
+                setPhone,
+                setCurrentPage,
+                setRole,
+            }}>
             <main className='relative overflow-x-hidden'>
                 <Control />
             </main>

@@ -10,17 +10,42 @@ import {
     DropdownMenuRadioItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { CurrentPageContext } from './current-page-context';
+import { CostForm } from './cost-form';
 
 export function DropdownMenuRadio({
+    id,
     name,
     status,
     getOrders,
 }: {
+    id: string;
     name: string;
     status: string;
     getOrders: () => void;
 }) {
     const [position, setPosition] = React.useState(status);
+    const context = React.useContext(CurrentPageContext);
+    const { role } = context;
+
+    function setStatusByValue(value: string) {
+        setPosition(value);
+        fetch(`http://localhost:8000/api/update-order/`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id: id,
+                status: value,
+            }),
+        })
+            .then((response) => response.json())
+            .then(() => {
+                getOrders();
+            });
+    }
 
     return (
         <DropdownMenu>
@@ -31,36 +56,52 @@ export function DropdownMenuRadio({
                 <DropdownMenuRadioGroup
                     value={position}
                     onValueChange={(value) => {
-                        setPosition(value);
-                        const data = localStorage.getItem(name);
-
-                        if (data) {
-                            console.log(name);
-                            const parsedData = JSON.parse(data);
-                            let status = value;
-                            parsedData.status = status;
-                            localStorage.setItem(
-                                name,
-                                JSON.stringify(parsedData),
-                            );
-                            getOrders();
-                        }
+                        setStatusByValue(value);
                     }}>
-                    <DropdownMenuRadioItem value='processing'>
-                        В обработке
-                    </DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value='preparation'>
-                        Подготовка сырья
-                    </DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value='making'>
-                        Изготовление
-                    </DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value='trial'>
-                        Проба формы
-                    </DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value='ready'>
-                        Готов
-                    </DropdownMenuRadioItem>
+                    {role == 'admin' ? (
+                        <>
+                            <DropdownMenuRadioItem
+                                value='processing'
+                                disabled={true}>
+                                В обработке
+                            </DropdownMenuRadioItem>
+                            <CostForm
+                                name={name}
+                                id={id}
+                                setPosition={(value: string) => {
+                                    setStatusByValue(value);
+                                }}
+                                disabled={
+                                    position == 'processing' ? false : true
+                                }
+                            />
+                            <DropdownMenuRadioItem
+                                value='making'
+                                disabled={true}>
+                                Изготовление
+                            </DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem
+                                value='trial'
+                                disabled={position == 'making' ? false : true}>
+                                Проба формы
+                            </DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem
+                                value='ready'
+                                disabled={position == 'trial' ? false : true}>
+                                Готов
+                            </DropdownMenuRadioItem>
+                        </>
+                    ) : (
+                        <>
+                            <DropdownMenuRadioItem
+                                value='cansel'
+                                disabled={
+                                    position == 'processing' ? false : true
+                                }>
+                                Отменить
+                            </DropdownMenuRadioItem>
+                        </>
+                    )}
                 </DropdownMenuRadioGroup>
             </DropdownMenuContent>
         </DropdownMenu>

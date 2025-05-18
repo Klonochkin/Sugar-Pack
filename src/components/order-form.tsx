@@ -9,43 +9,35 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { CurrentPageContext } from './current-page-context';
 
 export function OrderForm({ name }: { name: string }) {
     const [isOpen, setIsOpen] = useState(false);
 
-    const [phone, setPhone] = useState('');
     const [quantity, setQuantity] = useState(0);
+
+    const context = useContext(CurrentPageContext);
+    const { phone } = context;
 
     function placeOrder() {
         if (!phone && quantity <= 0) return false;
-        let status = 'processing';
-        const keys = Object.keys(localStorage);
-
-        const productKeys = keys.filter((key) => key.startsWith('product'));
-
-        const productNumbers = productKeys.map((key) => {
-            const match = key.match(/product(\d+)/);
-            return match ? parseInt(match[1], 10) : 0;
-        });
-
-        const maxProductNumber =
-            productNumbers.length > 0 ? Math.max(...productNumbers) : 0;
-
-        let key = `product${maxProductNumber + 1}`;
-        const order = {
-            name: { name },
-            quantity: { quantity },
-            phone: { phone },
-            status: { status },
-            key: { key },
-        };
-
-        localStorage.setItem(
-            `product${maxProductNumber + 1}`,
-            JSON.stringify(order),
-        );
-        return true;
+        fetch('http://localhost:8000/api/send-order/', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: name,
+                phone: phone,
+                quantity: quantity,
+            }),
+        })
+            .then((response) => response.json())
+            .then((result) => {
+                console.log(result);
+            });
     }
 
     return (
@@ -53,7 +45,6 @@ export function OrderForm({ name }: { name: string }) {
             <Button
                 variant='default'
                 onClick={() => {
-                    setPhone('');
                     setQuantity(0);
                     setIsOpen((isOpen) => !isOpen);
                 }}>
@@ -65,18 +56,6 @@ export function OrderForm({ name }: { name: string }) {
                 </DialogHeader>
                 <div className='grid gap-4 py-4'>
                     <div className='grid grid-cols-4 items-center gap-4'>
-                        <Label htmlFor='phone' className='text-right'>
-                            Номер телефона
-                        </Label>
-                        <Input
-                            id='phone'
-                            placeholder='+79000000000'
-                            type='tel'
-                            className='col-span-3'
-                            onChange={(e) => setPhone(e.target.value)}
-                        />
-                    </div>
-                    <div className='grid grid-cols-4 items-center gap-4'>
                         <Label htmlFor='quantity' className='text-right'>
                             Количество
                         </Label>
@@ -86,6 +65,7 @@ export function OrderForm({ name }: { name: string }) {
                             min='1'
                             id='quantity'
                             className='col-span-3'
+                            autoFocus={phone ? true : false}
                             onChange={(e) =>
                                 setQuantity(parseInt(e.target.value))
                             }

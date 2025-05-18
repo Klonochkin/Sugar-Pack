@@ -3,7 +3,7 @@ import { Button } from './ui/button';
 import { useNavigate } from 'react-router';
 import { useEffect, useState } from 'react';
 
-interface Data {
+export interface Data {
     id: string;
     name: string;
     quantity: string;
