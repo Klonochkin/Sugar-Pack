@@ -1,9 +1,12 @@
 import hashlib
 import os
-from fastapi import FastAPI, Form, HTTPException, Request
+import zipfile
+from fastapi import FastAPI, Form, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pymongo import MongoClient
+from openpyxl import Workbook
+from openpyxl.styles import Alignment
 
 app = FastAPI()
 
@@ -331,3 +334,84 @@ async def getMaterial(request: Request):
         del post_dict['_id']
         posts_list.append(post_dict)
     return posts_list
+
+@app.get("/api/export-report/")
+async def export(request:Request):
+    cookies = request.cookies
+    session_value = cookies.get("session")
+    res = postSession.find_one({"session": session_value})
+    if(res==None):
+        return [{'message': '403 error'}]
+    userInfo = postUser.find_one({"id":res["id"]})
+    if(userInfo["role"] != "admin"):
+        return [{'message': '411 error'}]
+    wb = Workbook()
+    ws = wb.active
+
+    res = postMaterial.find({}).sort("idOrder")
+
+    orderId = []
+    name = []
+    count = []
+    material = []
+    quantity = []
+
+    for document in res:
+        orderInfo = postOrder.find_one({"id":int(document['idOrder'])})
+        orderId.append(document['idOrder'])
+        name.append(orderInfo["name"])
+        count.append(orderInfo["quantity"])
+        material.append(document['material'])
+        quantity.append(document['quantity'])
+
+    with zipfile.ZipFile('Material spent.zip', 'w') as zip_file:
+        pass
+
+
+    wb.save('Material spent.xlsx')
+
+    ws['A1'] = '№ заказа'
+    ws['B1'] = 'Товар'
+    ws['C1'] = 'Количество товара, шт'
+    ws['D1'] = 'Материал'
+    ws['E1'] = 'Количество, шт'
+    for i in range(len(orderId)):
+        if(i == 0 or orderId[i] != orderId[i-1]):
+            ws.cell(row=i+2, column=1).value = orderId[i]
+            ws.cell(row=i+2, column=2).value = name[i]
+            ws.cell(row=i+2, column=3).value = count[i]
+            ws.cell(row=i+2, column=4).value = material[i]
+            ws.cell(row=i+2, column=5).value = quantity[i]
+        else:
+            ws.cell(row=i+2, column=4).value = material[i]
+            ws.cell(row=i+2, column=5).value = quantity[i]
+
+    for col_idx, col in enumerate(ws.columns, start=1):
+        max_width = 0
+        for cell in col:
+            if cell.value:
+                width = len(str(cell.value)) + 2
+                if width > max_width:
+                    max_width = width
+                cell.alignment = Alignment(horizontal='center', vertical='top')
+        ws.column_dimensions[chr(64 + col_idx)].width = max_width
+
+    wb.save('Material spent.xlsx')
+
+    with zipfile.ZipFile('Material spent.zip', 'a') as zip_file:
+        zip_file.write("Material spent.xlsx")
+
+    try:
+        return Response(
+            content=open("Material spent.zip", "rb").read(),
+            media_type="application/zip",
+            headers={
+                "Content-Disposition": "attachment; filename=Material spent.zip",
+                "Cache-Control": "max-age=3600",
+                "Accept-Encoding": "gzip, compress, br"
+            }
+        )
+    finally:
+        os.remove("Material spent.xlsx")
+        os.remove("Material spent.zip")
+
