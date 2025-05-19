@@ -26,6 +26,7 @@ export function NavigationMenuHeader() {
     const context = useContext(CurrentPageContext);
     const { role, setRole, setLogin, setEmail, setPhone } = context;
     const navigate = useNavigate();
+    const [load, setLoad] = React.useState(true);
 
     function exportReport() {
         fetch('http://localhost:8000/api/export-report/', {
@@ -61,63 +62,89 @@ export function NavigationMenuHeader() {
                 }
                 // }
                 console.log(result[0].role);
+                setLoad(false);
             });
     }, []);
 
     return (
         <div className='flex flex-row items-center gap-[2.5rem]'>
-            <div>
-                <Button variant='ghost' className='invisible'>
-                    Вход
-                </Button>
-            </div>
-            <NavigationMenu>
-                <NavigationMenuList className=''>
-                    <NavigationMenuItem>
-                        <NavigationMenuLink
-                            className={navigationMenuTriggerStyle()}
-                            href='/catalog'>
-                            Каталог
-                        </NavigationMenuLink>
-                    </NavigationMenuItem>
-                    <NavigationMenuItem className='flex justify-center items-center'>
-                        <NavigationMenuLink href='/'>
-                            <img
-                                className='cursor-pointer w-[7.5rem]'
-                                src='../images/logo.png'
-                                alt=''
-                            />
-                        </NavigationMenuLink>
-                    </NavigationMenuItem>
-                    <NavigationMenuItem>
-                        <NavigationMenuLink
-                            className={navigationMenuTriggerStyle()}
-                            href='/order'>
-                            Заказы
-                        </NavigationMenuLink>
-                    </NavigationMenuItem>
-                </NavigationMenuList>
-            </NavigationMenu>
-            <div>
-                {role == 'none' ? (
-                    <Button
-                        variant='ghost'
-                        onClick={() => {
-                            navigate(`/login`);
-                        }}>
-                        Вход
-                    </Button>
-                ) : role == 'admin' ? (
-                    <div className='flex gap-[2.5rem]'>
-                        <AccountCard />
-                        <Button variant='ghost' onClick={() => exportReport()}>
-                            Отчёт
-                        </Button>
+            {load ? (
+                <div></div>
+            ) : (
+                <>
+                    <div>
+                        {role == 'none' ? (
+                            <Button
+                                variant='ghost'
+                                className='invisible'
+                                disabled>
+                                Вход
+                            </Button>
+                        ) : role == 'admin' ? (
+                            <div className='flex gap-[2.5rem]'>
+                                <AccountCard />
+                                <Button
+                                    variant='ghost'
+                                    className='invisible'
+                                    disabled>
+                                    Отчёт
+                                </Button>
+                            </div>
+                        ) : (
+                            <AccountCard />
+                        )}
                     </div>
-                ) : (
-                    <AccountCard />
-                )}
-            </div>
+                    <NavigationMenu>
+                        <NavigationMenuList className=''>
+                            <NavigationMenuItem>
+                                <NavigationMenuLink
+                                    className={navigationMenuTriggerStyle()}
+                                    href='/catalog'>
+                                    Каталог
+                                </NavigationMenuLink>
+                            </NavigationMenuItem>
+                            <NavigationMenuItem className='flex justify-center items-center'>
+                                <NavigationMenuLink href='/'>
+                                    <img
+                                        className='cursor-pointer w-[7.5rem]'
+                                        src='../images/logo.png'
+                                        alt=''
+                                    />
+                                </NavigationMenuLink>
+                            </NavigationMenuItem>
+                            <NavigationMenuItem>
+                                <NavigationMenuLink
+                                    className={navigationMenuTriggerStyle()}
+                                    href='/order'>
+                                    Заказы
+                                </NavigationMenuLink>
+                            </NavigationMenuItem>
+                        </NavigationMenuList>
+                    </NavigationMenu>
+                    <div>
+                        {role == 'none' ? (
+                            <Button
+                                variant='ghost'
+                                onClick={() => {
+                                    navigate(`/login`);
+                                }}>
+                                Вход
+                            </Button>
+                        ) : role == 'admin' ? (
+                            <div className='flex gap-[2.5rem]'>
+                                <AccountCard />
+                                <Button
+                                    variant='ghost'
+                                    onClick={() => exportReport()}>
+                                    Отчёт
+                                </Button>
+                            </div>
+                        ) : (
+                            <AccountCard />
+                        )}
+                    </div>
+                </>
+            )}
         </div>
     );
 }

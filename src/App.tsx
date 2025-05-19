@@ -18,7 +18,7 @@ function Control() {
                     <NavigationMenuHeader />
                 </div>
             </div>
-            <div className='flex gap-4 flex-col min-h-[calc(100vh-340px)]'>
+            <div className='flex gap-4 flex-col min-h-[100vh]'>
                 <Routes>
                     <Route path='/' element={<LandingPage />}></Route>
                     <Route path='/login' element={<AuthForm />}></Route>
