@@ -2,6 +2,7 @@ import { Label } from '@radix-ui/react-label';
 import { Input } from './ui/input';
 import { Ghost, Mail, MessageCircleMore, Phone } from 'lucide-react';
 import { Button } from './ui/button';
+import { CarouselPart } from './caorusel-part';
 
 function AdvantCard({
     img,
@@ -30,10 +31,10 @@ export function LandingPage() {
                 <div className='before:absolute before:w-full before:h-full before:bg-black before:opacity-[50%]' />
             </div>
             <div className='flex flex-col gap-5 max-w-[750px] m-auto antialiased mt-[4rem] mb-[7rem]'>
-                <p className='text-3xl relative'>
+                <div className='text-3xl relative'>
                     <div className='before:absolute before:-left-4 before:top-0 before:h-full before:bg-[#d28e5f] before:w-[4px]' />
                     Лучшие упаковки здесь
-                </p>
+                </div>
                 <p>
                     ООО «Сахара Пак» – производитель пластиковой упаковки с
                     более чем 20-летним опытом работы. В ассортименте компании
@@ -62,11 +63,10 @@ export function LandingPage() {
                     при упаковке, транспортировке, складировании товаров, а
                     также в производстве.
                 </p>
-                {}
-                <p className='text-3xl relative mt-5'>
+                <div className='text-3xl relative mt-5'>
                     <div className='before:absolute before:-left-4 before:top-0 before:h-full before:bg-[#d28e5f] before:w-[4px]' />
                     Преимущества сотрудничества с заводом пластиковой упаковки
-                </p>
+                </div>
                 <p>
                     ООО «Сахара Пак» – производитель, отвечающий за качество
                     своей продукции, соблюдение всех условий договоров и сроков.
@@ -103,10 +103,10 @@ export function LandingPage() {
                         специфики бизнеса заказчиков.
                     </li>
                 </ul>
-                <p className='text-3xl relative mt-5'>
+                <div className='text-3xl relative mt-5'>
                     <div className='before:absolute before:-left-4 before:top-0 before:h-full before:bg-[#d28e5f] before:w-[4px]' />
                     Наши преимущества
-                </p>
+                </div>
                 <div className='grid grid-flow-row auto-cols-max gap-10 md:grid-cols-2 lg:grid-cols-3'>
                     <AdvantCard
                         img='../images/exchange.png'
@@ -124,8 +124,14 @@ export function LandingPage() {
                         subtitle='Индивидуальный подход к каждому клиенту'
                     />
                 </div>
+                <div className='mt-5 text-3xl flex flex-col gap-5'>
+                    Наши партнёры
+                    <div className='m-auto'>
+                        <CarouselPart></CarouselPart>
+                    </div>
+                </div>
             </div>
-            <div className=' relative before:absolute before:w-full before:h-full before:bg-[url(../images/bg2_1903x620_eeb.jpg)] before:-z-10 before:opacity-30'>
+            <div className='relative before:absolute before:w-full before:h-full before:bg-[url(../images/bg2_1903x620_eeb.jpg)] before:-z-10 before:opacity-30'>
                 <div className='max-w-[750px] m-auto antialiased mt-[7rem] mb-[7rem] flex flex-row justify-around items-center'>
                     <div className='w-[50%] flex flex-col gap-5'>
                         <div>

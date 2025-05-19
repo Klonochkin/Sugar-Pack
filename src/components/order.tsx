@@ -51,6 +51,7 @@ export function Order() {
                     <div className='max-w-[750px] m-auto antialiased mt-[7rem] mb-[7rem]'>
                         <Button
                             variant='ghost'
+                            className='mb-[2rem]'
                             onClick={() => {
                                 navigate(-1);
                             }}>

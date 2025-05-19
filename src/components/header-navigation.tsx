@@ -72,37 +72,8 @@ export function NavigationMenuHeader() {
                 <div></div>
             ) : (
                 <>
-                    <div>
-                        {role == 'none' ? (
-                            <Button
-                                variant='ghost'
-                                className='invisible'
-                                disabled>
-                                Вход
-                            </Button>
-                        ) : role == 'admin' ? (
-                            <div className='flex gap-[2.5rem]'>
-                                <AccountCard />
-                                <Button
-                                    variant='ghost'
-                                    className='invisible'
-                                    disabled>
-                                    Отчёт
-                                </Button>
-                            </div>
-                        ) : (
-                            <AccountCard />
-                        )}
-                    </div>
                     <NavigationMenu>
                         <NavigationMenuList className=''>
-                            <NavigationMenuItem>
-                                <NavigationMenuLink
-                                    className={navigationMenuTriggerStyle()}
-                                    href='/catalog'>
-                                    Каталог
-                                </NavigationMenuLink>
-                            </NavigationMenuItem>
                             <NavigationMenuItem className='flex justify-center items-center'>
                                 <NavigationMenuLink href='/'>
                                     <img
@@ -110,6 +81,13 @@ export function NavigationMenuHeader() {
                                         src='../images/logo.png'
                                         alt=''
                                     />
+                                </NavigationMenuLink>
+                            </NavigationMenuItem>
+                            <NavigationMenuItem>
+                                <NavigationMenuLink
+                                    className={navigationMenuTriggerStyle()}
+                                    href='/catalog'>
+                                    Каталог
                                 </NavigationMenuLink>
                             </NavigationMenuItem>
                             <NavigationMenuItem>

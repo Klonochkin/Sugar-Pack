@@ -69,6 +69,7 @@ export function TypeCatalog() {
                         {data && data?.length > 0 ? (
                             data.map((i) => (
                                 <Card
+                                    key={i.id}
                                     id={i.id}
                                     name={i.name}
                                     quantity={i.quantity}

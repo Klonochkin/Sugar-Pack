@@ -66,18 +66,22 @@ export function ProductCatalog() {
                 <div className='max-w-[750px] m-auto antialiased mt-[7rem] mb-[7rem]'>
                     <Button
                         variant='ghost'
+                        className='mb-[2rem]'
                         onClick={() => {
                             navigate(-1);
                         }}>
                         <ArrowBigLeftIcon /> Назад
                     </Button>
-                    <p className='text-xl font-semibold mb-[2rem]'>
-                        Типовая упаковка
-                    </p>
+                    {/* <p className='text-xl font-semibold mb-[2rem]'></p> */}
                     <div className='grid grid-flow-row auto-cols-max gap-10 md:grid-cols-2 lg:grid-cols-3'>
                         {data && data.length > 0 ? (
                             data.map((i) => (
-                                <Card id={i.id} name={i.name} image={i.image} />
+                                <Card
+                                    key={i.id}
+                                    id={i.id}
+                                    name={i.name}
+                                    image={i.image}
+                                />
                             ))
                         ) : (
                             <div>Товар временно отсутствует</div>

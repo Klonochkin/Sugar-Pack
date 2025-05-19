@@ -136,6 +136,16 @@ async def sendFeedbacj(request: Request):
         postFeedback.insert_one(post)
     return {"message": "Отзыв отправлен"}
 
+@app.get('/api/get-feedback')
+async def getFeedback():
+    dataSend = postFeedback.find({})
+    posts_list = []
+    for post in dataSend:
+        post_dict = dict(post)
+        del post_dict['_id']
+        posts_list.append(post_dict)
+    return posts_list
+
 @app.post("/api/signIn")
 async def signIn(request: Request):
     data = await request.json()
