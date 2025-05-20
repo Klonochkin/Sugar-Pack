@@ -117,8 +117,9 @@ async def getProduct(id: str):
     return posts_list
 
 @app.post('/api/send-feedback')
-async def sendFeedbacj(request: Request):
+async def sendFeedback(request: Request):
     data = await request.json()
+    id = data["id"]
     name = data["name"]
     email = data["email"]
     phone = data["phone"]
@@ -128,6 +129,7 @@ async def sendFeedbacj(request: Request):
     if(postFeedback.count_documents({}) == n):
         post = {
             "id": userId,
+            "productId": int(id),
             "name": name,
             "email": email,
             "phone":phone,
@@ -136,7 +138,19 @@ async def sendFeedbacj(request: Request):
         postFeedback.insert_one(post)
     return {"message": "Отзыв отправлен"}
 
-@app.get('/api/get-feedback')
+@app.get('/api/get-feedback/{id}')
+async def getFeedback(id: str):
+    dataSend = postFeedback.find({"productId": int(id)})
+    posts_list = []
+    for post in dataSend:
+        post_dict = dict(post)
+        del post_dict['_id']
+        del post_dict['email']
+        del post_dict['phone']
+        posts_list.append(post_dict)
+    return posts_list
+
+@app.get('/api/get-feedback/')
 async def getFeedback():
     dataSend = postFeedback.find({})
     posts_list = []
@@ -145,6 +159,7 @@ async def getFeedback():
         del post_dict['_id']
         posts_list.append(post_dict)
     return posts_list
+
 
 @app.post("/api/signIn")
 async def signIn(request: Request):

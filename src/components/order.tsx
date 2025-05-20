@@ -16,11 +16,17 @@ interface Feature {
     discFeature: string;
 }
 
+interface Feedback {
+    name: string;
+    message: string;
+}
+
 export function Order() {
     const navigate = useNavigate();
     const [data, setData] = useState<Data[] | null>(null);
     const [feature, setFeature] = useState<Feature[] | null>(null);
-    const [isDescription, setIsDescription] = useState(true);
+    const [feedback, setFeedback] = useState<Feedback[] | null>(null);
+    const [currentPage, setCurrentPage] = useState(0);
     const location = useLocation();
     location;
     const path = location.pathname.split('/');
@@ -39,6 +45,12 @@ export function Order() {
             .then((response) => response.json())
             .then((result: Feature[]) => {
                 setFeature(result);
+            });
+        fetch(`http://localhost:8000/api/get-feedback/${id}`)
+            .then((response) => response.json())
+            .then((result: Feedback[]) => {
+                setFeedback(result);
+                console.log(result);
             });
     }, []);
 
@@ -75,32 +87,54 @@ export function Order() {
                             <div className='flex flex-row gap-5'>
                                 <Button
                                     variant='ghost'
-                                    onClick={() => setIsDescription(true)}>
+                                    onClick={() => setCurrentPage(0)}>
                                     Описание
                                 </Button>
                                 <Button
                                     variant='ghost'
-                                    onClick={() => setIsDescription(false)}>
+                                    onClick={() => setCurrentPage(1)}>
                                     Характеристики
                                 </Button>
+                                <Button
+                                    variant='ghost'
+                                    onClick={() => setCurrentPage(2)}>
+                                    Отзывы
+                                </Button>
+                                <Button
+                                    variant='ghost'
+                                    onClick={() => setCurrentPage(3)}>
+                                    Вопросы
+                                </Button>
                             </div>
-                            <Feedback />
+                            <Feedback id={parseInt(id)} />
                         </div>
                         <div className='mt-5'>
-                            {isDescription ? (
+                            {currentPage == 0 ? (
                                 <p>
                                     {data && data[0].description
                                         ? data[0].description
                                         : 'Описание временно отсутствует'}
                                 </p>
-                            ) : feature && feature?.length > 0 ? (
-                                feature.map((i) => (
+                            ) : currentPage == 1 ? (
+                                feature && feature?.length > 0 ? (
+                                    feature.map((i) => (
+                                        <div>
+                                            {i.nameFeature}: {i.discFeature}
+                                        </div>
+                                    ))
+                                ) : (
+                                    'Характеристики временно отсутствуют'
+                                )
+                            ) : currentPage == 2 ? (
+                                <div>Отзывы</div>
+                            ) : feedback && feedback?.length > 0 ? (
+                                feedback.map((i) => (
                                     <div>
-                                        {i.nameFeature}: {i.discFeature}
+                                        {i.name}: {i.message}
                                     </div>
                                 ))
                             ) : (
-                                'Характеристики временно отсутствуют'
+                                'Вопросы пока что отсутствуют'
                             )}
                         </div>
                     </div>

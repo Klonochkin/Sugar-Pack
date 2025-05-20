@@ -14,19 +14,33 @@ import { useNavigate } from 'react-router';
 
 export function NavigationMenuDemo() {
     const navigate = useNavigate();
+    function exportReport() {
+        fetch('http://localhost:8000/api/export-report/', {
+            method: 'GET',
+            credentials: 'include',
+        })
+            .then((response) => response.blob())
+            .then((blob) => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'Material spent.zip';
+                a.click();
+            });
+    }
     return (
         <NavigationMenu>
             <NavigationMenuList>
                 <NavigationMenuItem>
                     <NavigationMenuTrigger></NavigationMenuTrigger>
                     <NavigationMenuContent>
-                        <ul className='gap-3 p-4 md:w-[200px] lg:w-[300px]'>
+                        <ul className='gap-3 p-4 w-[200px]'>
                             <ListItem
-                                onClick={() => navigate('/catalog')}
-                                title='Каталог'></ListItem>
+                                onClick={() => exportReport()}
+                                title='Скачать отчёт'></ListItem>
                             <ListItem
                                 onClick={() => navigate('/order')}
-                                title='Заказы'></ListItem>
+                                title='Вопросы'></ListItem>
                         </ul>
                     </NavigationMenuContent>
                 </NavigationMenuItem>

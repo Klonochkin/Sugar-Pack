@@ -14,6 +14,7 @@ import { useContext } from 'react';
 import { CurrentPageContext } from './current-page-context';
 import { useNavigate } from 'react-router';
 import { AccountCard } from './card';
+import { NavigationMenuDemo } from './navigation-menu';
 
 interface UserInfo {
     login: string;
@@ -27,21 +28,6 @@ export function NavigationMenuHeader() {
     const { role, setRole, setLogin, setEmail, setPhone } = context;
     const navigate = useNavigate();
     const [load, setLoad] = React.useState(true);
-
-    function exportReport() {
-        fetch('http://localhost:8000/api/export-report/', {
-            method: 'GET',
-            credentials: 'include',
-        })
-            .then((response) => response.blob())
-            .then((blob) => {
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'Material spent.zip';
-                a.click();
-            });
-    }
 
     React.useEffect(() => {
         fetch('http://localhost:8000/', {
@@ -111,11 +97,12 @@ export function NavigationMenuHeader() {
                         ) : role == 'admin' ? (
                             <div className='flex gap-[2.5rem]'>
                                 <AccountCard />
-                                <Button
+                                {/* <Button
                                     variant='ghost'
                                     onClick={() => exportReport()}>
                                     Отчёт
-                                </Button>
+                                </Button> */}
+                                <NavigationMenuDemo />
                             </div>
                         ) : (
                             <AccountCard />
