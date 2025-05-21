@@ -129,8 +129,28 @@ export function Order() {
                                 <div>Отзывы</div>
                             ) : feedback && feedback?.length > 0 ? (
                                 feedback.map((i) => (
-                                    <div>
-                                        {i.name}: {i.message}
+                                    <div className='flex flex-row justify-between h-[100px]'>
+                                        <div className='flex flex-row gap-5 items-center justify-start'>
+                                            <img
+                                                src={`../images/${data ? data[0].image : ''}`}
+                                                alt=''
+                                                className='h-[100px]'
+                                            />
+                                            <div className='flex flex-col items-start justify-center'>
+                                                <p className='text-sm font-bold'>
+                                                    {data[0].name}
+                                                </p>
+                                                <p className='text-xl font-bold'>
+                                                    {i.message}
+                                                </p>
+                                                <p className='opacity-75'>
+                                                    {i.name}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className='h-full flex items-center justify-center'>
+                                            <Button>Ответить</Button>
+                                        </div>
                                     </div>
                                 ))
                             ) : (
