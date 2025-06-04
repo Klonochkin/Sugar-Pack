@@ -46,6 +46,7 @@ function Card({
 
 export function TypeCatalog() {
     const [data, setData] = useState<Data[] | null>(null);
+    const [load, setLoad] = useState(true);
 
     useEffect(() => {
         fetch('http://localhost:8000/api/get-type-catalog')
@@ -53,30 +54,36 @@ export function TypeCatalog() {
             .then((result: Data[]) => {
                 setData(result);
                 console.log(result);
+                setLoad(false);
             });
     }, []);
 
     return (
         <>
-            <div className='max-w-[750px] m-auto antialiased mt-[7rem] mb-[7rem]'>
-                <p className='text-xl font-semibold mb-[2rem]'>Каталог</p>
-                <div className='grid grid-flow-row auto-cols-max gap-10 md:grid-cols-2 lg:grid-cols-3'>
-                    {data && data?.length > 0 ? (
-                        data.map((i) => (
-                            <Card
-                                id={i.id}
-                                name={i.name}
-                                quantity={i.quantity}
-                                image={i.image}
-                            />
-                        ))
-                    ) : (
-                        <div>
-                            Каталог пока что пуст. Приносим свои извинения
-                        </div>
-                    )}
+            {load ? (
+                <div></div>
+            ) : (
+                <div className='max-w-[750px] m-auto antialiased mt-[7rem] mb-[7rem]'>
+                    <p className='text-xl font-semibold mb-[2rem]'>Каталог</p>
+                    <div className='grid grid-flow-row auto-cols-max gap-10 md:grid-cols-2 lg:grid-cols-3'>
+                        {data && data?.length > 0 ? (
+                            data.map((i) => (
+                                <Card
+                                    key={i.id}
+                                    id={i.id}
+                                    name={i.name}
+                                    quantity={i.quantity}
+                                    image={i.image}
+                                />
+                            ))
+                        ) : (
+                            <div>
+                                Каталог пока что пуст. Приносим свои извинения
+                            </div>
+                        )}
+                    </div>
                 </div>
-            </div>
+            )}
         </>
     );
 }

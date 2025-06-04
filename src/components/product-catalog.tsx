@@ -42,6 +42,7 @@ function Card({
 export function ProductCatalog() {
     const navigate = useNavigate();
     const [data, setData] = useState<Data[] | null>(null);
+    const [load, setLoad] = useState(true);
     const location = useLocation();
     location;
     const path = location.pathname.split('/');
@@ -53,32 +54,41 @@ export function ProductCatalog() {
             .then((result: Data[]) => {
                 setData(result);
                 console.log(result);
+                setLoad(false);
             });
     }, []);
 
     return (
         <>
-            <div className='max-w-[750px] m-auto antialiased mt-[7rem] mb-[7rem]'>
-                <Button
-                    variant='ghost'
-                    onClick={() => {
-                        navigate(-1);
-                    }}>
-                    <ArrowBigLeftIcon /> Назад
-                </Button>
-                <p className='text-xl font-semibold mb-[2rem]'>
-                    Типовая упаковка
-                </p>
-                <div className='grid grid-flow-row auto-cols-max gap-10 md:grid-cols-2 lg:grid-cols-3'>
-                    {data && data.length > 0 ? (
-                        data.map((i) => (
-                            <Card id={i.id} name={i.name} image={i.image} />
-                        ))
-                    ) : (
-                        <div>Товар временно отсутствует</div>
-                    )}
+            {load ? (
+                <div></div>
+            ) : (
+                <div className='max-w-[750px] m-auto antialiased mt-[7rem] mb-[7rem]'>
+                    <Button
+                        variant='ghost'
+                        className='mb-[2rem]'
+                        onClick={() => {
+                            navigate(-1);
+                        }}>
+                        <ArrowBigLeftIcon /> Назад
+                    </Button>
+                    {/* <p className='text-xl font-semibold mb-[2rem]'></p> */}
+                    <div className='grid grid-flow-row auto-cols-max gap-10 md:grid-cols-2 lg:grid-cols-3'>
+                        {data && data.length > 0 ? (
+                            data.map((i) => (
+                                <Card
+                                    key={i.id}
+                                    id={i.id}
+                                    name={i.name}
+                                    image={i.image}
+                                />
+                            ))
+                        ) : (
+                            <div>Товар временно отсутствует</div>
+                        )}
+                    </div>
                 </div>
-            </div>
+            )}
         </>
     );
 }
